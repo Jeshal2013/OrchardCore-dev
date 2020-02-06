@@ -1,0 +1,73 @@
+@model OrchardCore.RAQModule.ViewModels.RaqSendMessageModel
+@{
+    Layout = null;
+}
+
+<div class="modal fade" id="RequestQuoteModel" tabindex="-1" role="dialog" aria-labelledby="RequestQuoteModel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <form action="post" name="requestForm" id="requestForm">
+            @Html.AntiForgeryToken()
+            <div class="modal-content">
+                <div class="modal-header">
+                    <p class="modal-title">Please fill out the information below and a river cruise specialist will be in touch with you soon.</p>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-inline">
+                        <li class="list-inline-item">Interested In: @Model.IternaryName<!-- Itinerary Name Here --></li>
+                        <li class="list-inline-item"><h2></h2></li>
+                    </ul>
+                    <h2></h2>
+                    @Html.HiddenFor(m => m.EmailAddress)
+                    @Html.HiddenFor(m => m.Price)
+                    @Html.HiddenFor(m => m.IternaryName)
+                    @Html.HiddenFor(m => m.PageURL)
+                    @Html.HiddenFor(m => m.Bcc)
+                    @Html.HiddenFor(m => m.IPAddress)
+                    @Html.HiddenFor(m => m.Cc)
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label>First Name</label>
+                                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", placeholder = "Enter first name" })
+                            </div>
+                            <div class="col">
+                                <label>Last Name</label>
+                                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = "Enter last name" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label>Email</label>
+                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Enter email" })
+                            </div>
+
+                        </div>
+                    </div>
+                    <button type="button" id="btnsendMessage" name="btnsendMessage" class="btn btn-primary float-right">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(document).on('click', '#RequestQuoteModel .close', function () {
+        $('#RequestQuoteModel').modal("hide");
+        setTimeout(function () {
+            $("#DivRequestQuoteModal").html("");
+        }, 500);
+
+    });
+    $(document).ready(function () {
+        $.getJSON("https://api.ipify.org/?format=json", function(e) {
+            var clietnIp = e.ip;
+            $('#IPAddress').val(clietnIp);
+});
+    })
+</script>

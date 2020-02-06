@@ -1,0 +1,19 @@
+@using OrchardCore.RAQModule.ViewModels
+@model RaqSendMessageModel
+
+@{
+    Layout = "";
+}
+
+<p>
+    @T["Dear {0},", Model.EmailAddress]
+</p>
+<p>@T["{0} {1}", Model.FirstName, Model.LastName] has requested Quote for @T["{0}", Model.IternaryName]</p>
+<p>@T["Price : {0}", Model.Price]</p>
+<p>@T["Requested Email : {0}", Model.Email]</p>
+
+<p>@T["Page url : {0}", Model.PageURL]</p>
+@*@T["IP Address : "]*@ 
+    @*<p id='ApprovedLabel'><a style='color:blue; cursor:pointer' href='https://awebanalysis.com/en/ip-lookup/'@Model.IPAddress'/' target='_blank'>Click</a></p></p>*@
+<p>@T["IP Address : {0}", Model.IPAddress]</p>
+<p>@T["Request Date Time : {0}", DateTime.Now]</p>

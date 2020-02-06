@@ -1,0 +1,36 @@
+@using OrchardCore.RAQModule.ViewModels;
+@model RAQModulePartEditViewModel
+
+<div class="form-group">
+    <label asp-for="EmailAddress">@T["EmailAddress"]</label>
+    <input asp-for="EmailAddress" type="text" class="form-control content-preview-text" />
+    <span class="hint">@T["The EmailAddress to send mail."]</span>
+</div>
+<div class="form-group">
+    <label asp-for="Cc">@T["Cc"]</label>
+    <input asp-for="Cc" type="text" class="form-control content-preview-text" />
+    <span class="hint">@T["Add additional recipients to your email."]</span>
+</div>
+<div class="form-group">
+    <label asp-for="Bcc">@T["Bcc"]</label>
+    <input asp-for="Bcc" type="text" class="form-control content-preview-text" />
+    <span class="hint">@T["Add additional recipients to your email that your contacts and CC'd recipients won't see."]</span>
+</div>
+<div class="form-group">
+    <label asp-for="Price">@T["Price"]</label>
+    <input asp-for="Price" type="text" class="form-control content-preview-text" />
+    <span class="hint">@T["The Price of the content item."]</span>
+</div>
+<div class="form-group">
+    <label asp-for="ButtonTitle">@T["ButtonTitle"]</label>
+    <input asp-for="ButtonTitle" type="text" class="form-control content-preview-text" />
+    <span class="hint">@T["The Button text."]</span>
+</div>
+<div class="form-group">
+    <label asp-for="IternaryName">@T["IternaryName"]</label>
+    <input asp-for="IternaryName" type="text" class="form-control content-preview-text" />
+    <span class="hint">@T["The Iternary Name."]</span>
+</div>
+
+
+

@@ -1,0 +1,181 @@
+@using OrchardCore.RAQModule.Models
+@model RAQModulePart
+@*<h1>@Model.Title</h1>*@
+@{
+    var modelValue = Model;
+}
+<style>
+    .requestquoteButton {
+        cursor: pointer;
+    }
+</style>
+<style>
+    .UpdateProgress {
+        border: 16px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 16px solid #3498db;
+        width: 120px;
+        height: 120px;
+        -webkit-animation: spin 2s linear infinite; /* Safari */
+        animation: spin 2s linear infinite;
+    }
+    .loadingBar {
+        top: 0;
+        right: 0;
+        left: 0;
+        position: absolute;
+        background-color: rgba(0, 0, 0, 0.5490196078431373);
+        height: 100vh;
+        width: 100%;
+        z-index: 9999999;
+    }
+
+    .loader {
+        display: flex;
+        justify-content: center;
+        vertical-align: middle;
+        align-items: center;
+        height: 100%;
+    }
+
+    /* Safari */
+    @@-webkit-keyframes spin {
+        0% {
+            -webkit-transform: rotate(0deg);
+        }
+
+        100% {
+            -webkit-transform: rotate(360deg);
+        }
+    }
+
+@@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
+
+
+
+<div class="divRequestQuote">
+    <button class="requestquoteButton btn btn-primary" data-emails="@Model.EmailAddress" data-price="@Model.Price" data-iternaryname="@Model.IternaryName" data-Cc="@Model.Cc" data-Bcc="@Model.Bcc" type="button" value="@Model.ButtonTitle">@Model.ButtonTitle</button>
+</div>
+
+
+<div class="modal fade" id="RequestSuccessModel" tabindex="-1" role="dialog" aria-labelledby="RequestSuccessModel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <p class="modal-title">Request Submitted</p>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-success">
+                    <span class="successMessage">Thank you for Requesting.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript">
+    var bindModalUrl = '@Url.Action("BindRequestModal", "RAQAdmin", new { area = "OrchardCore.RAQModule" })';
+    $(document).ready(function () {
+        var attrLength = $("body").attr("class");
+        if (typeof attrLength == typeof undefined || attrLength == false) {
+            $("body").attr("class", "customBodyClass");
+        }
+        var divLength = $("#DivRequestQuoteModal").length;
+        var modalHtml = "";
+        if (parseInt(divLength) == 0) {
+            modalHtml = "<div class='DivRequestQuoteModal' id='DivRequestQuoteModal'></div>";
+            $(".customBodyClass").append(modalHtml);
+        }
+        $(".customBodyClass").append("<div class='loadingBar' style='display:none'><div class='loader'><div id='UpdateProgress' class='UpdateProgress'></div></div></div>");
+    })
+    $(document).on('click', '#RequestSuccessModel .close', function () {
+        $('#RequestSuccessModel').modal("hide");
+        $("div.modal-backdrop").remove();
+    });
+
+    $(document).on('click', ".requestquoteButton", function () {
+        //Ajax call
+        ShowLoading();
+        var email = $(this).attr("data-emails");
+        var price = $(this).attr("data-price");
+        var iteName = $(this).attr("data-iternaryname");
+        var cc = $(this).attr("data-Cc");
+        var bcc = $(this).attr("data-Bcc");
+        $.ajax({
+            url: bindModalUrl,
+            type: "GET",
+            data: { emailAddress: email, productPrice: price, iternaryName: iteName, Cc: cc, Bcc: bcc },
+            cache: false,
+             success: function (data) {
+                    if (data != null) {
+                        $("#DivRequestQuoteModal").html("");
+                        $("#DivRequestQuoteModal").html(data);
+                        $("#RequestQuoteModel").modal('show');
+
+                 }
+                    HideLoading();
+            },
+            error: function() {
+                    // Fail message
+                $("#DivRequestQuoteModal").html("<div class='alert alert-danger'><span>Something is wrong..</span></div>");
+                   HideLoading();
+            }
+        });
+    })
+
+
+
+
+    $(document).on('click', '#btnsendMessage', function (e) {
+        ShowLoading();
+          $.ajaxPrefilter(function (options, originalOptions, jqXhr) {
+        if (options.type.toUpperCase() === "POST") {
+            var token = $("input:hidden[name^=__RequestVerificationToken]").first();
+            if (!token.length) return;
+            jqXhr.setRequestHeader("RequestVerificationToken", token.val());
+        }
+          });
+
+        var bindModalUrl1 = '@Url.Action("Index", "SendRequest",new { area="OrchardCore.RAQModule"})';
+        var frm = $('#requestForm');
+        $.ajax({
+            type: 'POST',
+            data: frm.serialize(),
+            url: bindModalUrl1,
+            success: function (response) {
+                if (response != null && response.status == 1) {
+                    $('#RequestQuoteModel').modal("hide");
+                    $("#DivRequestQuoteModal").html("");
+                        $("#RequestSuccessModel").modal('show');
+                }
+                HideLoading();
+  },
+            error: function (e) {
+      HideLoading()
+                console.log(e);
+
+  },
+  dataType: "json",
+});
+
+    });
+
+          //clear all fields
+    //$('#contactForm').trigger("reset");
+    function ShowLoading() {
+        $(".loadingBar").show()
+    }
+    function HideLoading() {
+        $(".loadingBar").hide()
+    }
+</script>
+
+
+

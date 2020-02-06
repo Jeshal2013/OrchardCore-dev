@@ -1,0 +1,8 @@
+[
+  {
+    "inputs": [
+      "Assets/Image/loading.gif"
+    ],
+    "output": "wwwroot/Image/loading.gif"
+  }
+  ]
